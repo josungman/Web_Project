@@ -1,25 +1,62 @@
-import "./App.css";
-import { ToastContainer, toast } from "react-toastify";
-import { getUsers } from "@/services/userService";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import { useEffect } from "react";
+import { useAuthStore } from "@/store/auth";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import LoginPage from "@/pages/Login";
+import DashboardPage from "@/pages/Dashboard";
+import RootRedirect from "@/pages/RootRedirect";
+import MyProjectsPage from "./pages/MyProjects";
+import NotificationsPage from "./pages/Notifications";
+import ChatsPage from "./pages/Chats";
 
 function App() {
-  const handleClick = async () => {
-    try {
-      const users = await getUsers();
-      console.log(users);
-      toast.success("유저 로딩 성공!");
-    } catch {
-      toast.error("유저 로딩 실패 😢");
-    }
-  };
+  const initializeAuth = useAuthStore((state) => state.initializeAuth);
 
+  useEffect(() => {
+    initializeAuth();
+  }, []);
   return (
-    <div className="p-6">
-      <button onClick={handleClick} className="px-4 py-2 bg-blue-500 text-white rounded">
-        사용자 불러오기
-      </button>
-      <ToastContainer />
-    </div>
+    <BrowserRouter>
+      <ToastContainer position="top-right" autoClose={3000} />
+
+      <Routes>
+        <Route path="/" element={<RootRedirect />} /> {/* ✅ 루트 처리 */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/my-projects"
+          element={
+            <ProtectedRoute>
+              <MyProjectsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notification"
+          element={
+            <ProtectedRoute>
+              <NotificationsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/chats"
+          element={
+            <ProtectedRoute>
+              <ChatsPage />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
