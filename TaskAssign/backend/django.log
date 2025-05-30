@@ -1,0 +1,2 @@
+[2025-05-30 19:04:42,932] [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+[2025-05-30 19:17:55,824] [INFO] django.utils.autoreload: C:\Web_Project\TaskAssign\backend\config\settings.py changed, reloading.

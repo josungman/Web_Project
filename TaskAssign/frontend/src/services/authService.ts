@@ -1,30 +1,33 @@
 // src/services/authService.ts
-
-const dummyUser = {
-  id: 1,
-  email: "test@test.com",
-  password: "123456",
-  name: "테스트 유저",
-};
-
+import { api } from "@/lib/api"; // axios 인스턴스
 import type { LoginResponse } from "@/types/auth";
 
 export async function login(email: string, password: string): Promise<LoginResponse> {
-  console.log("📡 로그인 호출됨", email, password);
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (email === dummyUser.email && password === dummyUser.password) {
-        resolve({
-          accessToken: "dummy-token-123456",
-          user: {
-            id: dummyUser.id,
-            name: dummyUser.name,
-            email: dummyUser.email,
-          },
-        });
-      } else {
-        reject(new Error("이메일 또는 비밀번호가 일치하지 않습니다."));
-      }
-    }, 500); // 가짜 딜레이
+  const res = await api.post("/users/login/", { email, password });
+  const { access, refresh } = res.data;
+
+  // /users/me/로 유저 정보 가져오기
+  const me = await api.get("/users/me/", {
+    headers: { Authorization: `Bearer ${access}` },
   });
+
+  return {
+    token: access,
+    refreshToken: refresh,
+    user: me.data,
+  };
+}
+
+export async function getMe() {
+  const token = localStorage.getItem("token");
+
+  if (!token) throw new Error("No token");
+
+  const response = await api.get("/users/me/", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
 }

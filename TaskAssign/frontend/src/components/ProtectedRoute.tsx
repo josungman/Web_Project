@@ -2,17 +2,15 @@ import { useAuthStore } from "@/store/auth";
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const { user, isInitialized } = useAuthStore();
+  const token = useAuthStore((state) => state.token);
+  const isInitialized = useAuthStore((state) => state.isInitialized);
 
   if (!isInitialized) {
-    return <div>로딩 중...</div>; // or null
+    // ✅ 초기화 전에는 아무것도 렌더링하지 않음
+    return <div className="w-screen h-screen bg-white" />;
   }
 
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
-
-  return children;
+  return token ? children : <Navigate to="/login" />;
 };
 
 export default ProtectedRoute;

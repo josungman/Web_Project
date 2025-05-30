@@ -1,2 +1,3 @@
 TaskAssign/frontend/.env
 TaskAssign/backend/.env
+*.pyc

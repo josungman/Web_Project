@@ -11,11 +11,16 @@ import NotificationsPage from "./pages/Notifications";
 import ChatsPage from "./pages/Chats";
 
 function App() {
-  const initializeAuth = useAuthStore((state) => state.initializeAuth);
+  const { initializeAuth, isInitialized } = useAuthStore();
 
   useEffect(() => {
     initializeAuth();
-  }, []);
+  }, [initializeAuth]);
+
+  if (!isInitialized) {
+    // ✅ 초기화 안 됐으면 아무것도 보여주지 않음 (또는 로딩 스피너)
+    return null;
+  }
   return (
     <BrowserRouter>
       <ToastContainer position="top-right" autoClose={3000} />

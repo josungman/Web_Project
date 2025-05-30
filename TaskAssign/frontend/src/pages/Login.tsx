@@ -1,17 +1,18 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/auth";
 import { LoginForm } from "@/components/LoginForm";
+import { Navigate } from "react-router-dom";
 
 export default function LoginPage() {
-  const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
+  const isInitialized = useAuthStore((state) => state.isInitialized);
 
-  useEffect(() => {
-    if (user) {
-      navigate("/dashboard");
-    }
-  }, [user, navigate]);
+  // 초기화 안 되었으면 아무것도 안 보여줌
+  if (!isInitialized) return null;
+
+  // 로그인 상태라면 대시보드로 이동
+  if (user) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50">

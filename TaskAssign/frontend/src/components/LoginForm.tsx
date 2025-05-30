@@ -29,18 +29,20 @@ export function LoginForm() {
     },
   });
 
-  const setUser = useAuthStore((state) => state.setUser);
+  const setAuth = useAuthStore((state) => state.setAuth);
 
   const onSubmit = async (data: FormValues) => {
     try {
       const res = await login(data.email, data.password);
-      setUser(res.user, res.accessToken);
+      setAuth(res.user, res.token, res.refreshToken);
 
       // ✅ 자동 로그인 체크 여부에 따라 저장
       if (data.autoLogin) {
         localStorage.setItem("autoLogin", "true");
+        localStorage.setItem("refreshToken", res.refreshToken); // ✅ 저장
       } else {
         localStorage.removeItem("autoLogin");
+        localStorage.removeItem("refreshToken"); // ✅ 비우기
       }
 
       toast.success("로그인 성공!");
