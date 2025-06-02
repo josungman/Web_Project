@@ -29,6 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+DJANGO_ENV = os.environ.get("DJANGO_ENV", "development")
 DEBUG = os.environ.get('DJANGO_ENV') != 'production'
 
 if os.environ.get('DJANGO_ENV') == 'production':
@@ -141,7 +142,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -171,8 +172,17 @@ REST_FRAMEWORK = {
 TIME_ZONE = 'Asia/Seoul'  # 한국 시간
 USE_TZ = False  # 기본값 True
 
-CORS_ALLOW_ALL_ORIGINS = True  # 개발 중에는 (배포시 주석)
-#CORS_ALLOWED_ORIGINS #배포 시에 (개발시 주석)
+# CORS 설정
+if DJANGO_ENV == "production":
+    CORS_ALLOW_ALL_ORIGINS = False
+    CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', cast=Csv())
+else:
+    CORS_ALLOW_ALL_ORIGINS = True
 
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
