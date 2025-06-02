@@ -61,9 +61,8 @@ class MeAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-         # 프로필까지 한 번에 가져오기
         user = User.objects.select_related("profile").get(id=request.user.id)
-        serializer = UserSerializer(user)
+        serializer = UserSerializer(user, context={"request": request})  # ✅ context 전달
         return Response(serializer.data)
     
 

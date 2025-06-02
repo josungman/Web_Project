@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { login } from "@/services/authService";
 import { useAuthStore } from "@/store/auth";
-import { useNavigate } from "react-router-dom"; // ✅ 추가
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const schema = z.object({
   email: z.string().email("유효한 이메일을 입력하세요"),
@@ -83,6 +84,14 @@ export function LoginForm() {
       <Button type="submit" className="w-full">
         로그인
       </Button>
+
+      {/* ✅ 회원가입 링크 하단에 위치 */}
+      <div className="text-center mt-2">
+        <span className="text-sm text-gray-600">계정이 없으신가요? </span>
+        <Link to="/signup" className="text-sm text-blue-600 hover:underline">
+          회원가입
+        </Link>
+      </div>
     </form>
   );
 }

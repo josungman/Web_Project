@@ -6,8 +6,11 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const isInitialized = useAuthStore((state) => state.isInitialized);
 
   if (!isInitialized) {
-    // ✅ 초기화 전에는 아무것도 렌더링하지 않음
-    return <div className="w-screen h-screen bg-white" />;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <span className="text-sm text-gray-400">로딩 중...</span>
+      </div>
+    );
   }
 
   return token ? children : <Navigate to="/login" />;

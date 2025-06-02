@@ -1,6 +1,6 @@
 // src/services/authService.ts
 import { api } from "@/lib/api"; // axios 인스턴스
-import type { LoginResponse } from "@/types/auth";
+import type { LoginResponse, SignupFormData, SignupResponse } from "@/types/auth";
 
 export async function login(email: string, password: string): Promise<LoginResponse> {
   const res = await api.post("/users/login/", { email, password });
@@ -16,6 +16,22 @@ export async function login(email: string, password: string): Promise<LoginRespo
     refreshToken: refresh,
     user: me.data,
   };
+}
+
+export async function signup(form: SignupFormData): Promise<SignupResponse> {
+  const formData = new FormData();
+  formData.append("username", form.username);
+  formData.append("email", form.email); // ✅ 추가
+  formData.append("password", form.password);
+  if (form.photo) {
+    formData.append("photo", form.photo);
+  }
+
+  const res = await api.post("/users/signup/", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+  return res.data;
 }
 
 export async function getMe() {

@@ -4,11 +4,13 @@ import { useEffect } from "react";
 import { useAuthStore } from "@/store/auth";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import LoginPage from "@/pages/Login";
+import SignupPage from "@/pages/Signup";
 import DashboardPage from "@/pages/Dashboard";
 import RootRedirect from "@/pages/RootRedirect";
 import MyProjectsPage from "./pages/MyProjects";
 import NotificationsPage from "./pages/Notifications";
 import ChatsPage from "./pages/Chats";
+import { AnimatePresence } from "framer-motion";
 
 function App() {
   const { initializeAuth, isInitialized } = useAuthStore();
@@ -18,50 +20,56 @@ function App() {
   }, [initializeAuth]);
 
   if (!isInitialized) {
-    // ✅ 초기화 안 됐으면 아무것도 보여주지 않음 (또는 로딩 스피너)
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <span className="text-sm text-gray-400">로딩 중...</span>
+      </div>
+    );
   }
   return (
-    <BrowserRouter>
-      <ToastContainer position="top-right" autoClose={3000} />
+    <AnimatePresence mode="wait">
+      <BrowserRouter>
+        <ToastContainer position="top-right" autoClose={3000} />
 
-      <Routes>
-        <Route path="/" element={<RootRedirect />} /> {/* ✅ 루트 처리 */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <DashboardPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/my-projects"
-          element={
-            <ProtectedRoute>
-              <MyProjectsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/notification"
-          element={
-            <ProtectedRoute>
-              <NotificationsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/chats"
-          element={
-            <ProtectedRoute>
-              <ChatsPage />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+        <Routes>
+          <Route path="/" element={<RootRedirect />} /> {/* ✅ 루트 처리 */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-projects"
+            element={
+              <ProtectedRoute>
+                <MyProjectsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/notification"
+            element={
+              <ProtectedRoute>
+                <NotificationsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chats"
+            element={
+              <ProtectedRoute>
+                <ChatsPage />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </AnimatePresence>
   );
 }
 
