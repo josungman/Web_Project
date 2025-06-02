@@ -50,7 +50,13 @@ export function LoginForm() {
 
       navigate("/dashboard"); // ✅ 로그인 성공 시 대시보드 이동
     } catch (err: any) {
-      toast.error("로그인 실패: " + (err?.response?.data?.message || "알 수 없는 오류"));
+      toast.error(
+        "로그인 실패: " +
+          (err?.response?.data?.message ||
+            err?.response?.data?.detail ||
+            (Array.isArray(err?.response?.data?.non_field_errors) ? err.response.data.non_field_errors.join(", ") : "") ||
+            "알 수 없는 오류")
+      );
     }
   };
 
