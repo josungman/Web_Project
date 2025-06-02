@@ -65,6 +65,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -132,17 +133,19 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'  # 한국 시간
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -169,9 +172,6 @@ REST_FRAMEWORK = {
 }
 
 
-TIME_ZONE = 'Asia/Seoul'  # 한국 시간
-USE_TZ = False  # 기본값 True
-
 # CORS 설정
 if DJANGO_ENV == "production":
     CORS_ALLOW_ALL_ORIGINS = False
@@ -180,7 +180,7 @@ else:
     CORS_ALLOW_ALL_ORIGINS = True
 
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 
 STATICFILES_DIRS = [

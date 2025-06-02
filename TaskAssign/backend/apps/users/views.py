@@ -10,6 +10,8 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.utils.timezone import now
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class SignupAPIView(APIView):
     def post(self, request):
@@ -59,7 +61,9 @@ class MeAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        serializer = UserSerializer(request.user)
+         # 프로필까지 한 번에 가져오기
+        user = User.objects.select_related("profile").get(id=request.user.id)
+        serializer = UserSerializer(user)
         return Response(serializer.data)
     
 
