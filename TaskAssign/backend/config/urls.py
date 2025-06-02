@@ -14,11 +14,18 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+from django.http import HttpResponse
 from django.contrib import admin
 from django.urls import path
 from django.urls import path, include
 
+
+def index(request):
+    return HttpResponse("Hello, this is the backend API root.")
+
 urlpatterns = [
+    path('', index),  # ✅ 루트 URL 추가!
     path('admin/', admin.site.urls),
     path("api/users/", include("apps.users.urls")),
     path("api/projects/", include("apps.projects.urls")),

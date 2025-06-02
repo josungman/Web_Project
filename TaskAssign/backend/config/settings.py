@@ -15,6 +15,7 @@ from decouple import config, Csv
 import pymysql
 pymysql.install_as_MySQLdb()
 from datetime import timedelta
+import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,9 +29,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = os.environ.get('DJANGO_ENV') != 'production'
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
+if os.environ.get('DJANGO_ENV') == 'production':
+    ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
+else:
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -169,3 +173,6 @@ USE_TZ = False  # 기본값 True
 
 CORS_ALLOW_ALL_ORIGINS = True  # 개발 중에는 (배포시 주석)
 #CORS_ALLOWED_ORIGINS #배포 시에 (개발시 주석)
+
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
